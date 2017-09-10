@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_3DModelExporter"
         xmlns:ht="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
+        xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="3DModelExporter" Height="350" Width="525"
+        Title="3DModelExporter" Height="550" Width="525"
+        x:Name="mRoot"
         DataContext="{StaticResource MainViewModel}">
   <Grid>
     <Grid.ColumnDefinitions>
@@ -14,9 +16,8 @@
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
 
-    <ht:HelixViewport3D Grid.Column="0" x:Name="mViewPort" Camera="{ht:PerspectiveCamera 5.3,-12.3,3.3,-6.3,11,-6.6}">
+    <ht:HelixViewport3D Grid.Column="0" x:Name="mViewPort">
       <ht:SunLight/>
-      <ht:FileModelVisual3D x:Name="m3DMdoel" Source="{Binding ModelPath}"/>
     </ht:HelixViewport3D>
 
     <StackPanel Background="DarkGray" Grid.Column="1">
@@ -35,12 +36,26 @@
       </StackPanel>
       <Separator/>
       <Label Content="Perspectives:"/>
-      <Button Content="Top" Command="PerspectiveSelected" CommandParameter="Top"/>
-      <Button Content="Side" Command="PerspectiveSelected" CommandParameter="Side"/>
-      <Button Content="Front" Command="PerspectiveSelected" CommandParameter="Front"/>
+      <Button Content="Top" Command="{Binding PerspectiveSelected}" CommandParameter="Top"/>
+      <Button Content="Side" Command="{Binding PerspectiveSelected}" CommandParameter="Side"/>
+      <Button Content="Front" Command="{Binding PerspectiveSelected}" CommandParameter="Front"/>
       <Separator/>
-      <Button Content="Export View" Command="Export"/>
+      <Button Content="Export View" Command="{Binding Export}" CommandParameter="{Binding ElementName=mRoot}"/>
       <Separator/>
+      <StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <Label Content="Dots Per Inch:"/>
+          <TextBlock Text="{Binding DotsPerInch}"/>
+        </StackPanel>
+        <Slider Minimum="32" Maximum="300" Value="{Binding DotsPerInch}"/>
+      </StackPanel>
+      <Separator/>
+      <StackPanel Orientation="Horizontal">
+        <Label Content="Wire diameter"/>
+        <TextBlock Text="{Binding LineDiameter}"/>
+      </StackPanel>
+      <Slider Minimum="1" Maximum="5" Value="{Binding LineDiameter}"/>
+      <wpfx:ColorPicker x:Name="mWireColorPicker" SelectedColor="{Binding Path=WireframeColor}"/>
     </StackPanel>
   </Grid>
 </Window>
