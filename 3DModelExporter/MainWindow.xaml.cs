@@ -23,7 +23,7 @@ namespace _3DModelExporter
         private void VM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             mViewPort.Children.Clear();
-            AddContours(VM.Model, VM.NumberOfDetails, VM.NumberOfDetails, VM.NumberOfDetails);
+            AddContours(VM.Model, VM.NumberOfDetailsX, VM.NumberOfDetailsY, VM.NumberOfDetailsZ);
         }
 
         private MainViewModel VM { get { return (DataContext as MainViewModel); } }
@@ -66,7 +66,7 @@ namespace _3DModelExporter
                     continue;
                 mViewPort.Children.Add(new TubeVisual3D
                 {
-                    Diameter = 0.03,
+                    Diameter = VM.LineDiameter / 100,
                     Path = new Point3DCollection(wContour),
                     Fill = new SolidColorBrush(VM.WireframeColor)
                 });

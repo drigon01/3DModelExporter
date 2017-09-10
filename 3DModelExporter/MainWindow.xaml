@@ -21,41 +21,55 @@
     </ht:HelixViewport3D>
 
     <StackPanel Background="DarkGray" Grid.Column="1">
-
-      <StackPanel Orientation="Horizontal" Width="Auto">
-        <Label Content="Browse for Model"/>
-        <Button Content="Click Me" Click="OnClick"/>
-      </StackPanel>
+      <Button Content="Browse for Model" Click="OnClick"/>
       <Separator/>
-      <StackPanel>
-        <StackPanel Orientation="Horizontal" Width="Auto">
+      <StackPanel IsEnabled="{Binding IsModellAvaiable}">
+        <StackPanel>
           <Label Content="Number of details:"/>
-          <TextBlock Text="{Binding NumberOfDetails}"/>
+          <StackPanel Orientation="Horizontal">
+            <Label Content="ALL:"/>
+            <TextBlock Text="{Binding NumberOfDetails}" Margin="0,0,10,0"/>
+            <Slider Minimum="0" Maximum="100" Value="{Binding NumberOfDetails}" Width="152"/>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal">
+            <Label Content="X:"/>
+            <TextBlock Text="{Binding NumberOfDetailsX}" Margin="0,0,15,0"/>
+            <Slider Minimum="0" Maximum="100" Value="{Binding NumberOfDetailsX}" Width="160"/>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal">
+            <Label Content="Y:"/>
+            <TextBlock Text="{Binding NumberOfDetailsY}" Margin="0,0,15,0"/>
+            <Slider Minimum="0" Maximum="100" Value="{Binding NumberOfDetailsY}" Width="160"/>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal">
+            <Label Content="Z:"/>
+            <TextBlock Text="{Binding NumberOfDetailsZ}" Margin="0,0,15,0"/>
+            <Slider Minimum="0" Maximum="100" Value="{Binding NumberOfDetailsZ}" Width="160"/>
+          </StackPanel>
         </StackPanel>
-        <Slider Minimum="0" Maximum="100" Value="{Binding NumberOfDetails}"/>
-      </StackPanel>
-      <Separator/>
-      <Label Content="Perspectives:"/>
-      <Button Content="Top" Command="{Binding PerspectiveSelected}" CommandParameter="Top"/>
-      <Button Content="Side" Command="{Binding PerspectiveSelected}" CommandParameter="Side"/>
-      <Button Content="Front" Command="{Binding PerspectiveSelected}" CommandParameter="Front"/>
-      <Separator/>
-      <Button Content="Export View" Command="{Binding Export}" CommandParameter="{Binding ElementName=mRoot}"/>
-      <Separator/>
-      <StackPanel>
+        <Separator/>
+        <Label Content="Perspectives:"/>
+        <Button Content="Top" Command="{Binding PerspectiveSelected}" CommandParameter="Top"/>
+        <Button Content="Side" Command="{Binding PerspectiveSelected}" CommandParameter="Side"/>
+        <Button Content="Front" Command="{Binding PerspectiveSelected}" CommandParameter="Front"/>
+        <Separator/>
+        <Button Content="Export View" Command="{Binding Export}" CommandParameter="{Binding ElementName=mViewPort}"/>
+        <Separator/>
+        <StackPanel>
+          <StackPanel Orientation="Horizontal">
+            <Label Content="Dots Per Inch:"/>
+            <TextBlock Text="{Binding DotsPerInch}"/>
+          </StackPanel>
+          <Slider Minimum="32" Maximum="300" Value="{Binding DotsPerInch}"/>
+        </StackPanel>
+        <Separator/>
         <StackPanel Orientation="Horizontal">
-          <Label Content="Dots Per Inch:"/>
-          <TextBlock Text="{Binding DotsPerInch}"/>
+          <Label Content="Wire diameter"/>
+          <TextBlock Text="{Binding LineDiameter}"/>
         </StackPanel>
-        <Slider Minimum="32" Maximum="300" Value="{Binding DotsPerInch}"/>
+        <Slider Minimum="1" Maximum="100" Interval="1" Value="{Binding LineDiameter}"/>
+        <wpfx:ColorPicker x:Name="mWireColorPicker" SelectedColor="{Binding Path=WireframeColor}"/>
       </StackPanel>
-      <Separator/>
-      <StackPanel Orientation="Horizontal">
-        <Label Content="Wire diameter"/>
-        <TextBlock Text="{Binding LineDiameter}"/>
-      </StackPanel>
-      <Slider Minimum="1" Maximum="5" Value="{Binding LineDiameter}"/>
-      <wpfx:ColorPicker x:Name="mWireColorPicker" SelectedColor="{Binding Path=WireframeColor}"/>
     </StackPanel>
   </Grid>
 </Window>

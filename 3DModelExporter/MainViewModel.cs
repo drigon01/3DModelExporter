@@ -15,6 +15,7 @@ namespace _3DModelExporter
     {
         private OpenFileDialog mDialog = new OpenFileDialog { Title = "Model Browser" };
 
+
         private int mNumberOfDetails = 8;
         public int NumberOfDetails
         {
@@ -22,11 +23,49 @@ namespace _3DModelExporter
             set
             {
                 mNumberOfDetails = value;
+                NumberOfDetailsX = value;
+                NumberOfDetailsY = value;
+                NumberOfDetailsZ = value;
                 NotifyPropertyChanged("NumberOfDetails");
             }
         }
 
-        private int mDotsPerInch = 32;
+        private int mNumberOfDetailsX = 8;
+        public int NumberOfDetailsX
+        {
+            get { return mNumberOfDetailsX; }
+            set
+            {
+                mNumberOfDetailsX = value;
+                NotifyPropertyChanged("NumberOfDetailsX");
+            }
+        }
+
+        private int mNumberOfDetailsY = 8;
+        public int NumberOfDetailsY
+        {
+            get { return mNumberOfDetailsY; }
+            set
+            {
+                mNumberOfDetailsY = value;
+                NotifyPropertyChanged("NumberOfDetailsY");
+            }
+        }
+
+        private int mNumberOfDetailsZ = 8;
+        public int NumberOfDetailsZ
+        {
+            get { return mNumberOfDetailsZ; }
+            set
+            {
+                mNumberOfDetailsZ = value;
+                NotifyPropertyChanged("NumberOfDetailsZ");
+            }
+        }
+
+        public bool IsModellAvaiable { get { return !(Model == null); } }
+
+        private int mDotsPerInch = 110;
         public int DotsPerInch
         {
             get { return mDotsPerInch; }
@@ -37,8 +76,8 @@ namespace _3DModelExporter
             }
         }
 
-        private int mLineDiameter = 3;
-        public int LineDiameter
+        private double mLineDiameter = 3;
+        public double LineDiameter
         {
             get { return mLineDiameter; }
             set
@@ -70,6 +109,7 @@ namespace _3DModelExporter
             {
                 mModel = value;
                 NotifyPropertyChanged("Model");
+                NotifyPropertyChanged("IsModellAvaiable");
             }
         }
 
@@ -80,15 +120,21 @@ namespace _3DModelExporter
             {
                 return mPerspectiveSelected ?? (mPerspectiveSelected =
                     new RelayCommand((param) =>
-                    {
-                        switch (param.ToString())
-                        {// Need to add proper calc to reposition over model's center
-                            case "Top": PerspectiveCameraSetup(10, -10, 10, -10, 10, -10); break;
-                            //Both should scale with the model to enclose everything in the scene
-                            case "Front": PerspectiveCameraSetup(0, 15, 0, 0, -15, 0); break;
-                            case "Side": PerspectiveCameraSetup(15, 0, 0, -15, 0, 0); break;
-                        }
-                    }, true));
+                    { SetPresetCameraPosition(param.ToString()); }, true));
+            }
+        }
+
+        public void SetPresetCameraPosition(string presetName)
+        {
+            ///PerspectiveCamera.UpDirection*3
+            var wBounds = Visual3DHelper.FindBounds(Model, null);
+            switch (presetName)
+            {// Need to add proper calc to reposition over model's center
+                case "Top": PerspectiveCameraSetup(0, -0.1, wBounds.SizeZ + 5, 0, -0.1, -(wBounds.SizeZ + 5)); break;
+
+                //Both should scale better with the model to enclose everything in the scene
+                case "Front": PerspectiveCameraSetup(0, -(wBounds.SizeY + 5), 0, 0, wBounds.SizeY + 5, 0); break;
+                case "Side": PerspectiveCameraSetup(wBounds.SizeX + 15, 0, 0, -(wBounds.SizeX + 15), 0, 0); break;
             }
         }
 
@@ -108,25 +154,21 @@ namespace _3DModelExporter
         {
             //viewport.Background = ();
 
-            RenderTargetBitmap bmp = new RenderTargetBitmap((int)viewport.ActualWidth, (int)viewport.ActualHeight, DotsPerInch, DotsPerInch, PixelFormats.Pbgra32);
+            RenderTargetBitmap bmp = new RenderTargetBitmap((int)1920, (int)1080, DotsPerInch, DotsPerInch, PixelFormats.Pbgra32);
             bmp.Render(viewport);
 
             var wPng = new PngBitmapEncoder();
             wPng.Frames.Add(BitmapFrame.Create(bmp));
 
-            using (Stream wStream = File.Create(@"D:\\" + DateTime.Now.Ticks + ".png")) { wPng.Save(wStream); }
+            var wDialog = new SaveFileDialog();
+            wDialog.ShowDialog();
+            if (string.IsNullOrEmpty(wDialog.FileName)) return;
+            using (Stream wStream = File.Create(wDialog.FileName)) { wPng.Save(wStream); }
         }
 
         public void OpenModel()
         {
-            mDialog.FileOk += MDialog_FileOk;
             mDialog.ShowDialog();
-        }
-
-        private void MDialog_FileOk(object sender, CancelEventArgs e)
-        {
-            mDialog.FileOk -= MDialog_FileOk;
-
             Model = new FileModelVisual3D { Source = mDialog.FileName };
         }
 
@@ -138,7 +180,6 @@ namespace _3DModelExporter
             PerspectiveCamera.UpDirection = new Vector3D(0, 0, 1);
             PerspectiveCamera.FieldOfView = 60;
         }
-
     }
 
     public class RelayCommand : ICommand
