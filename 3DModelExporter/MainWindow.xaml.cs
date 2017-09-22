@@ -15,7 +15,8 @@ namespace _3DModelExporter
         {
             InitializeComponent();
             DataContext = new MainViewModel();
-            VM.PropertyChanged += VM_PropertyChanged;
+            VM.Properties.PropertyChanged += VM_PropertyChanged;
+
             VM.PerspectiveCameraSetup(5.3, -12.3, 3.3, -6.3, 11, -6.6);
             mViewPort.Camera = VM.PerspectiveCamera;
         }
@@ -23,15 +24,10 @@ namespace _3DModelExporter
         private void VM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             mViewPort.Children.Clear();
-            AddContours(VM.Model, VM.NumberOfDetailsX, VM.NumberOfDetailsY, VM.NumberOfDetailsZ);
+            AddContours(VM.Properties.Model, VM.Properties.NumberOfDetailsX, VM.Properties.NumberOfDetailsY, VM.Properties.NumberOfDetailsZ);
         }
 
         private MainViewModel VM { get { return (DataContext as MainViewModel); } }
-
-        private void OnClick(object sender, RoutedEventArgs e)
-        {
-            VM.OpenModel();
-        }
 
         private Plane3D ContourPlane;
 
@@ -66,9 +62,9 @@ namespace _3DModelExporter
                     continue;
                 mViewPort.Children.Add(new TubeVisual3D
                 {
-                    Diameter = VM.LineDiameter / 100,
+                    Diameter = VM.Properties.LineDiameter / 100,
                     Path = new Point3DCollection(wContour),
-                    Fill = new SolidColorBrush(VM.WireframeColor)
+                    Fill = new SolidColorBrush(VM.Properties.WireframeColor)
                 });
             }
         }

@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="_3DModelExporter.PropertyMenu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:_3DModelExporter"
+        mc:Ignorable="d"
+        Height="auto" Width="200">
+  
+  <StackPanel Background="DarkGray" Grid.Column="1">
+    <Button Content="Browse for Model" Click="OnClick"/>
+    <Separator/>
+    <StackPanel IsEnabled="{Binding IsModellAvaiable}">
+      <StackPanel>
+        <Label Content="Number of details:"/>
+        <StackPanel Orientation="Horizontal">
+          <Label Content="ALL:"/>
+          <TextBlock Text="{Binding NumberOfDetails}" Margin="0,0,10,0"/>
+          <Slider Minimum="0" Maximum="100" Value="{Binding NumberOfDetails}" Width="152"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <Label Content="X:"/>
+          <TextBlock Text="{Binding NumberOfDetailsX}" Margin="0,0,15,0"/>
+          <Slider Minimum="0" Maximum="100" Value="{Binding NumberOfDetailsX}" Width="160"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <Label Content="Y:"/>
+          <TextBlock Text="{Binding NumberOfDetailsY}" Margin="0,0,15,0"/>
+          <Slider Minimum="0" Maximum="100" Value="{Binding NumberOfDetailsY}" Width="160"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <Label Content="Z:"/>
+          <TextBlock Text="{Binding NumberOfDetailsZ}" Margin="0,0,15,0"/>
+          <Slider Minimum="0" Maximum="100" Value="{Binding NumberOfDetailsZ}" Width="160"/>
+        </StackPanel>
+      </StackPanel>
+      <Separator/>
+      <Label Content="Perspectives:"/>
+      <Button Content="Top" Command="{Binding PerspectiveSelected}" CommandParameter="Top"/>
+      <Button Content="Side" Command="{Binding PerspectiveSelected}" CommandParameter="Side"/>
+      <Button Content="Front" Command="{Binding PerspectiveSelected}" CommandParameter="Front"/>
+      <Separator/>
+      <Button Content="Export View" Command="{Binding Export}"/>
+      <Separator/>
+      <StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <Label Content="Dots Per Inch:"/>
+          <TextBlock Text="{Binding DotsPerInch}"/>
+        </StackPanel>
+        <Slider Minimum="32" Maximum="300" Value="{Binding DotsPerInch}"/>
+      </StackPanel>
+      <Separator/>
+      <StackPanel Orientation="Horizontal">
+        <Label Content="Wire diameter"/>
+        <TextBlock Text="{Binding LineDiameter}"/>
+      </StackPanel>
+      <Slider Minimum="1" Maximum="100" Interval="1" Value="{Binding LineDiameter}"/>
+      <wpfx:ColorPicker x:Name="mWireColorPicker" SelectedColor="{Binding Path=WireframeColor}"/>
+    </StackPanel>
+  </StackPanel>
+</UserControl>
