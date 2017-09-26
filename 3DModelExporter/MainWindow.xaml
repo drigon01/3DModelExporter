@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_3DModelExporter"
+        xmlns:sharpGL="clr-namespace:SharpGL.WPF;assembly=SharpGL.WPF"
         xmlns:ht="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
         xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:me="clr-namespace:_3DModelExporter"
         mc:Ignorable="d"
         Title="3DModelExporter" Height="550" Width="525"
         x:Name="mRoot"
@@ -16,11 +16,29 @@
       <ColumnDefinition Width="*"/>
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
+    <local:PropertyMenu Grid.Column="1" DataContext="{Binding Properties}"/>
 
-    <ht:HelixViewport3D Grid.Column="0" x:Name="mViewPort">
-      <ht:SunLight/>
-    </ht:HelixViewport3D>
-    <me:PropertyMenu Grid.Column="1" DataContext="{Binding Properties}"/>
-
+    <ContentControl  Grid.Column="0" x:Name="mContentControl" Loaded="mContentControl_Loaded">
+      <ContentControl.Resources>
+        <DataTemplate x:Key="HelixToolkit">
+          <ht:HelixViewport3D x:Name="mHelixViewPort">
+            <ht:SunLight/>
+          </ht:HelixViewport3D>
+        </DataTemplate>
+        <DataTemplate x:Key="SharpGL">
+          <sharpGL:OpenGLControl/>
+        </DataTemplate>
+      </ContentControl.Resources>
+      <ContentControl.Style>
+        <Style TargetType="{x:Type ContentControl}">
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=Properties.ViewMode}" Value="{x:Static local:ViewMode.HelixToolkit}">
+              <Setter Property="ContentTemplate" Value="{StaticResource HelixToolkit}" />
+            </DataTrigger>
+          </Style.Triggers>
+          <Setter Property="ContentTemplate" Value="{StaticResource SharpGL}" />
+        </Style>
+      </ContentControl.Style>
+    </ContentControl>
   </Grid>
 </Window>

@@ -7,8 +7,9 @@
         xmlns:local="clr-namespace:_3DModelExporter"
         mc:Ignorable="d"
         Height="auto" Width="200">
-  
+
   <StackPanel Background="DarkGray" Grid.Column="1">
+    <Button Content="{Binding ViewModeName}" Click="ChangeViewMode"/>
     <Button Content="Browse for Model" Click="OnClick"/>
     <Separator/>
     <StackPanel IsEnabled="{Binding IsModellAvaiable}">
@@ -57,6 +58,8 @@
       </StackPanel>
       <Slider Minimum="1" Maximum="100" Interval="1" Value="{Binding LineDiameter}"/>
       <wpfx:ColorPicker x:Name="mWireColorPicker" SelectedColor="{Binding Path=WireframeColor}"/>
+      <Separator/>
+      <Button Content="Redraw" Command="{Binding Redraw}"/>
     </StackPanel>
   </StackPanel>
 </UserControl>
